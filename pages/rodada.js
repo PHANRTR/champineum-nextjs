@@ -34,9 +34,9 @@ export async function getStaticProps() {
   //const ret = await fetch(process.env.URL_ENDPOINT +  '/api/partidas')
   //const res = await ret.json()
   console.log(process.env.URL_ENDPOINT);
-  //const ret = await axios.get(process.env.URL_ENDPOINT +  '/api/partidas')
-  //const res = await ret.data
-  const res = []
+  const ret = await axios.get(process.env.URL_ENDPOINT +  '/api/partidas')
+  const res = await ret.data
+  //const res = []
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {
