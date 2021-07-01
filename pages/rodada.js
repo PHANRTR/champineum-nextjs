@@ -46,11 +46,9 @@ function Rodada({rodada, clubes}) {
 }
 
 export async function getStaticProps() {
-  // Call an external API endpoint to get posts
-  console.log('Buscando partidas...');
   const ret = await axios.get(process.env.URL_ENDPOINT +  '/api/partidas')
   const rodada = await ret.data
-  console.log('Buscando clubes...');
+
   const res = await axios.get(process.env.URL_ENDPOINT +  '/api/clubes')
   const clubes = await res.data.result
 
