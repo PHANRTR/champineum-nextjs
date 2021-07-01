@@ -17,7 +17,6 @@ async function connectToDatabase(uri) {
 
 module.exports = async (req, res) => {
   const db = await connectToDatabase(process.env.MONGODB_URI);
-
   db.connect(err => {
     console.log("Connected to MongoDB server...");
     const ids = db.db(process.env.MONGODB_DB).collection(process.env.MONGO_DB_COLLECTION)
