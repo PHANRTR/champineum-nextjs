@@ -3,6 +3,10 @@
   text-align: left 
 }
 
+.card Image {
+  vertical-align: middle;
+}
+
 .header {
   background-color: burlywood;
 }

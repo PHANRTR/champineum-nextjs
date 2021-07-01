@@ -11,6 +11,7 @@ async function connectToDatabase(uri) {
   }
 
   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  cachedDb = client;
 
   return client;
 }
@@ -22,8 +23,6 @@ module.exports = async (req, res) => {
     const ids = db.db(process.env.MONGODB_DB).collection(process.env.MONGO_DB_COLLECTION)
     ids.find({}).toArray(function(err, result) {
         if(!err) {
-          console.log("find query executed...")    
-          console.log(result)
           res.status(200).json({ result });
         } else {
           res.status(500).json({});
