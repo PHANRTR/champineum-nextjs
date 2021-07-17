@@ -6,10 +6,6 @@ let cachedDb = null;
 
 async function connectToDatabase(uri) {
 
-  //if (cachedDb) {
- //   return cachedDb;
-//  }
-
   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
   cachedDb = client;
 

@@ -11,8 +11,13 @@
   background-color: burlywood;
 }
 
+.table {
+  text-align: center;
+}
+
 .voltar {
- text-align: right 
+ text-align: right ;
+ vertical-align: center;
 }
 
 .card {

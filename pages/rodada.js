@@ -1,8 +1,27 @@
-import Link from 'next/link'
-import cardStyle from '../styles/Rodada.module.css'
 import axios from 'axios'
-import Head from 'next/head';
 import Image from 'next/image';
+import React from 'react'
+import ReactTable from "react-table-6";  
+import "react-table-6/react-table.css" 
+import styles from '../styles/Rodada.module.css'
+
+const columns =[
+{
+  Header: 'Time',
+  accessor: 'time_mandante'
+},
+{
+  Header: 'Clube Mandante',
+  accessor: 'clube_mandante'
+},
+{
+  Header: 'Clube Visitante',
+  accessor: 'clube_visitante'
+},
+{
+  Header: 'Time',
+  accessor: 'time_visitante'
+}];
 
 function Rodada({rodada, clubes}) {
 
@@ -19,30 +38,23 @@ function Rodada({rodada, clubes}) {
       let nome_visitante = visitante_cartola.length > 0? visitante_cartola[0].nome : "";
 
 
-      rodadas.push(<li key={rodada.partidas[i].partida_id} className={cardStyle.card}>
-                      <Image size='mini' src={mandante.escudos['45x45']} width='30' height='30' /> 
-                      {nome_mandante} x {nome_visitante}
-                      <Image size='mini' src={visitante.escudos['45x45']} width='30' height='30' /> 
-                    </li>)
+      rodadas.push( {
+                      "time_mandante": <Image size='mini' src={mandante.escudos['45x45']} width='30' height='30' />,
+                      "clube_mandante": nome_mandante,
+                      "clube_visitante": nome_visitante,
+                      "time_visitante": <Image size='mini' src={visitante.escudos['45x45']} width='30' height='30' />
+                    });
     }
   }
 
   return (
-    <>
-      <Head className={cardStyle.title}>Rodada</Head>
-      <div className={cardStyle.header}>
-      <h1 className={cardStyle.voltar}>
-        <Link href="/">
-          <a>Voltar</a>
-        </Link>
-      </h1>
-      </div>
-      <div>
-        <h2>Últimos Resultados</h2>
-        <ul>{rodadas}</ul>
-      </div>
-    </>
-  )
+    <ReactTable
+      data={rodadas}
+      columns={columns}
+      defaultPageSize={10}
+      className={styles.table}
+    />
+  );
 }
 
 export async function getStaticProps() {
