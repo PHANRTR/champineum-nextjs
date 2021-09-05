@@ -2,7 +2,7 @@ const url = require('url');
 const { MongoClient } = require('mongodb');
 
 // Create cached connection variable
-let cachedDb = null;
+//let cachedDb = null;
 
 async function connectToDatabase(uri) {
 
