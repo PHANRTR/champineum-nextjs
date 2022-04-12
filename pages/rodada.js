@@ -1,31 +1,22 @@
 import axios from 'axios'
 import Image from 'next/image';
 import React from 'react'
-import ReactTable from "react-table-6";  
-import "react-table-6/react-table.css" 
-import styles from '../styles/Rodada.module.css'
+import { Text, Badge, Table, Thead, Tbody, Tr, Th,Td, TableContainer, Container, Box, Grid, GridItem} from '@chakra-ui/react'
 
-const columns =[
-{
-  Header: 'Time',
-  accessor: 'time_mandante'
-},
-{
-  Header: 'Clube Mandante',
-  accessor: 'clube_mandante'
-},
-{
-  Header: 'Clube Visitante',
-  accessor: 'clube_visitante'
-},
-{
-  Header: 'Time',
-  accessor: 'time_visitante'
-}];
-
-function Rodada({rodada, clubes}) {
+function Rodada({rodada, clubes, status }) {
 
   let rodadas = [];
+
+  const a = new Date(status.fechamento.timestamp * 1000);
+  const hours = a.getHours();
+  const minutes = "0" + a.getMinutes();
+  const seconds = "0" + a.getSeconds();
+  var months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  const formattedTime = date + ' ' + month + ' ' + year + ' ' +  hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
   if(rodada.partidas != null) {
     for (let i = 0; i < rodada.partidas.length; i++) {
       let mandante = rodada.clubes[rodada.partidas[i].clube_casa_id];
@@ -48,26 +39,72 @@ function Rodada({rodada, clubes}) {
   }
 
   return (
-    <ReactTable
-      data={rodadas}
-      columns={columns}
-      defaultPageSize={10}
-      className={styles.table}
-    />
+<Grid
+  h='300px'
+  templateRows='repeat(2, 1fr)'
+  templateColumns='repeat(3, 1fr)'
+  gap={3} >
+    <GridItem colSpan={1}>
+      <Text fontSize='xl'>
+        Rodada: 
+        <Badge ml='1' fontSize='0.8em' colorScheme='green'>
+          {status.rodada_atual}
+        </Badge>
+      </Text>
+      </GridItem>
+      <GridItem colSpan={2}>
+      <Text fontSize='xl'>
+        Fechamento do mercado:
+        <Badge ml='1' fontSize='0.8em' colorScheme='green'>
+          {formattedTime}
+        </Badge>
+      </Text>
+      </GridItem>
+      <GridItem colSpan={3}>
+      <TableContainer w="100%">
+        <Table colorScheme='linkedin' type='sm'>
+          <Thead>
+            <Tr>
+              <Th w="10%">Time</Th>
+              <Th w="39%">Clube Mandante</Th>
+              <Th w="2%"></Th>
+              <Th w="39%">Clube Visitante</Th>
+              <Th w="10%">Time</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+              {rodadas.map((rodada, i) => (
+                <Tr key={i}> 
+                  <Td>{rodada.time_mandante}</Td>
+                  <Td>{rodada.clube_mandante}</Td>
+                  <Td>X</Td>
+                  <Td>{rodada.clube_visitante}</Td>
+                  <Td>{rodada.time_visitante}</Td>
+              </Tr>
+              ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      </GridItem>
+  </Grid>
   );
 }
 
 export async function getStaticProps() {
-  const ret = await axios.get(process.env.URL_ENDPOINT +  '/api/partidas')
+  let ret = await axios.get(process.env.URL_ENDPOINT +  '/api/partidas')
   const rodada = await ret.data
 
-  const res = await axios.get(process.env.URL_ENDPOINT +  '/api/clubes')
+  let res = await axios.get(process.env.URL_ENDPOINT +  '/api/clubes')
   const clubes = await res.data.result
+
+  const res_status = await axios.get(process.env.URL_ENDPOINT +  '/api/status')
+  const status = await res_status.data
 
   return {
     props: {
       rodada,
       clubes,
+      status,
     },
   }
 }
